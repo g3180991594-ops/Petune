@@ -29,11 +29,16 @@ async function requestJSON(url, options = {}) {
 }
 
 function setPage(pageId) {
-  document.querySelectorAll('.page').forEach((p) => p.classList.toggle('active-page', p.id === pageId));
+  const targetPageId = pageId === 'stylePage' ? 'studioPage' : pageId;
+  document.querySelectorAll('.page').forEach((p) => p.classList.toggle('active-page', p.id === targetPageId));
   document.querySelectorAll('.nav-link').forEach((b) => b.classList.toggle('active', b.dataset.page === pageId));
   if (pageId === 'libraryPage') loadHistory();
   if (pageId === 'communityPage') loadCommunity();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (pageId === 'stylePage') {
+    window.setTimeout(() => $('composePanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
 document.querySelectorAll('.nav-link').forEach((button) => button.addEventListener('click', () => setPage(button.dataset.page)));
@@ -313,7 +318,7 @@ function drawWaveform(audioBuffer) {
   const data = audioBuffer.getChannelData(0);
   const width = canvas.width, height = canvas.height;
   ctx.clearRect(0, 0, width, height);
-  ctx.strokeStyle = '#a79ae9'; ctx.lineWidth = 1.8; ctx.beginPath();
+  ctx.strokeStyle = '#58afe7'; ctx.lineWidth = 1.8; ctx.beginPath();
   const step = Math.max(1, Math.floor(data.length / width));
   for (let x = 0; x < width; x++) {
     let min = 1, max = -1;
@@ -324,7 +329,7 @@ function drawWaveform(audioBuffer) {
     ctx.moveTo(x, y1); ctx.lineTo(x, y2);
   }
   ctx.stroke();
-  ctx.strokeStyle = 'rgba(210,203,244,.55)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, height / 2); ctx.lineTo(width, height / 2); ctx.stroke();
+  ctx.strokeStyle = 'rgba(176, 218, 240, .75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, height / 2); ctx.lineTo(width, height / 2); ctx.stroke();
   canvas.hidden = false;
   canvas.previousElementSibling.hidden = true;
 }
